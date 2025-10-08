@@ -130,8 +130,9 @@ The **licheervnano** offers a smaller PCB size and better performance, with the 
     sudo dd if=./image/licheervnano_sd.img of=/dev/<your-sd> bs=4M status=progress conv=fsync
     sudo sync
     ```
-    > [!IMPORTANT]
-    > double-check `/dev/<your-sd>` before running `dd`.
+
+> [!IMPORTANT]
+> double-check `/dev/<your-sd>` before running `dd`.
 
 ---
 
@@ -349,6 +350,7 @@ Copy payloads and loot into the image before detaching, or write files to the UM
 8. After reboot the device will come up in **DEBUG MODE**. Your computer should now see RNDIS + UMS disk. You can edit payloads directly on the UMS disk.
 
 ---
+
 
 
 
