@@ -1,7 +1,7 @@
 [submodule "pcb"]
 	path = pcb
-	url = git@github-kaliassistant:KaliAssistant/Lichee-Jack-pcb.git
+	url = https://github.com/KaliAssistant/Lichee-Jack-pcb.git
 [submodule "sophgo-sg200x-debian"]
 	path = sophgo-sg200x-debian
-	url = git@github-kaliassistant:KaliAssistant/sophgo-sg200x-debian.git
+	url = https://github.com/KaliAssistant/sophgo-sg200x-debian.git
 	branch = lichee-jack
