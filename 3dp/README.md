@@ -54,9 +54,9 @@ Supported materials: **PLA+, PETG, or ABS**
 - Insert **plastic optic fiber** into the power LED holes for a diffused glow effect.  
 - Trim the ends flush with the surface.  
 
-<img src="../doc/IMG_E6644.JPG" width="51%">
-<img src="../doc/IMG_E6645.JPG" width="46%">
+<img src="../doc/IMG_E6644.JPG" width="51%"> <img src="../doc/IMG_E6645.JPG" width="46%">
 <img src="../doc/IMG_E6646.JPG" width="97.5%">
+
 ---
 
 ## Step 4 — Final Assembly
@@ -66,11 +66,8 @@ Supported materials: **PLA+, PETG, or ABS**
 3. Secure using **M2 screws**.  
 4. Do **not** overtighten — just snug fit.  
 
-<img src="../doc/IMG_E6638.JPG" width="46%">
-<img src="../doc/IMG_E6639.JPG" width="48%">
-
-<img src="../doc/IMG_E6640.JPG" width="22.5%">
-<img src="../doc/IMG_E6641.JPG" width="71%">
+<img src="../doc/IMG_E6638.JPG" width="46%"> <img src="../doc/IMG_E6639.JPG" width="48%">
+<img src="../doc/IMG_E6640.JPG" width="22.5%"> <img src="../doc/IMG_E6641.JPG" width="71%">
 
 > [!TIP]  
 > If using the keyring version, add the **RJ45 dummy plug** for protection and style.
@@ -84,8 +81,7 @@ Supported materials: **PLA+, PETG, or ABS**
 
 <img src="../doc/IMG_E6612.JPG" width="94%">
 
-<img src="../doc/IMG_E6626.JPG" width="33%">
-<img src="../doc/IMG_E6620.JPG" width="60%">
+<img src="../doc/IMG_E6626.JPG" width="33%"> <img src="../doc/IMG_E6620.JPG" width="60%">
 
 ---
 
