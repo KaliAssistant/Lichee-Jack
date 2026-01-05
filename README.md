@@ -5,352 +5,288 @@
 
 ## About
 
-**Lichee-jack** is a low-cost, DIY social engineering LAN implant inspired by the Hak5 SharkJack. 
-Designed for payload delivery, opportunistic wired auditing, and SE engagements, it features mod-switch mode control, RGB LED RJ45 feedback, and USB gadget interfaces.
+**Lichee-Jack** is a low-cost, DIY **social-engineering LAN Attack & Penetration Testing Army knife** inspired by the **Hak5 SharkJack**.
+It is designed for **payload delivery**, **opportunistic wired auditing**, and **red-team / SE engagements** in environments where localnet is accessible.
 
-The original idea for **Lichee-Jack** came from the **fox-jack** repo (available on my GitHub). However, the original design had several challenges: the size was too large, the SDK didn’t support glibc, and there were PCB design issues. To address these problems, I decided to use the **SIPEED licheervnano**. 
+Lichee-Jack combines **USB gadget functionality**, **on-board Ethernet**, and **hardware mode selection** into a compact, fully open-source platform.
 
-The **licheervnano** offers a smaller PCB size and better performance, with the root filesystem running **Debian**. It also supports **WiFi6**, has the same **SP3T mod-switch** (PCB-side slide toggle switch), and uses a **200mAh LiPo battery** with around **1 hour of uptime**.
+> 100% open-source hardware & software
+> Built for hackers, auditors, and embedded developers
 
-### Features
 
-* **USB gadget function**: **gt** by **linux-usb-gadgets**
-* **10/100 Mbps onboard GMAC Ethernet**
-* Based on **SIPEED licheervnano (sg2002)**
-* **open-source extension board PCB Design**:
-    * **200mAh LiPo battery support** (~1hr uptime)
-    * **NeoPixel RGB LED RJ45** status indicator
-    * **SP3T mod-switch** to select payloads
-* **3D-printable cases**
-* **Rootfs**: **Debian stable**
-* **Boot**: **SD card**
-* **U-Boot**: **sophgo official repo fork**
-* **Kernel**: **sophgo official linux-5.10 fork**
+
 
 ---
 
-## Repository Contents
+## Features
 
-* **sophgo official SDK**
-* **Image build scripts**
-* **3D-printable case designs**
-* **Extension board PCB design**:
-    * KiCad project
-    * Gerber files
-    * BOM
-    * CPL
-
----
-
-## Part List
-
-| Item                                    | Qty | Link |
-| --------------------------------------- | --- | ---- |
-| SiPeed licheerv nano (WE/W only)        | 1   | [Amazon](https://a.co/d/bqAde1m) |
-| M2x0.4 Heat-Set Thread Insert (D3×H2)   | 4   | [Amazon](https://a.co/d/6mJeA5C) |
-| M2x0.4 Ultra-Low Head Torx Screws (3mm) | 2   | [Amazon](https://a.co/d/fiHYJ7t) |
-| M2x0.4 Hex Socket Head Cap Screws (6mm) | 2   | [Amazon](https://a.co/d/4TCJOGo) |
-| 402030 Lipo 3.7v battery (1C discharge) | 1   | [Amazon](https://a.co/d/eNNC0nF) |
-
-> [!NOTE]
-> PCB & BOM: all files in the `pcb/` directory(git submodule)
+- **USB gadget functions**
+  - Powered by **gt (linux-usb-gadgets)**
+  - CDC-ECM, RNDIS, HID, Mass-Storage (payload-dependent)
+- **10/100 Mbps onboard Ethernet (GMAC)**
+- **Sipeed LicheeRV Nano** (SG2002 SoC, RISC-V)
+- **Open-source extension board**
+  - 200 mAh Li-Po battery management (≈ 1+ hour uptime)
+  - NeoPixel **RGB LED RJ45 status indicator**
+  - **SP3T mode-switch** for payload / debug selection
+  - 2×10 1.27 mm header for extension modules
+- **Wi-Fi 6 + Bluetooth 5.2** (SDIO module)
+- **1 W onboard speaker**
+- **16-bit digital microphone**
+- **Micro-SD boot**
+- **3D-printable enclosures**
 
 ---
 
+## How it works
 
-## Required Tools
+Lichee-Jack is designed to operate as a **plug-and-execute** LAN implant with minimal user interaction.
 
-* Soldering tools:
+### 1. Power & deployment
 
-  * Solder
-  * Solder iron
-  * Solder paste
-  * Solder flux
-  * Hot air gun (for SMD components on extension board)
+The device can be powered via:
+- USB (host or charger)
+- Internal Li-Po battery
 
----
-
-## Lichee-Jack EXT Board
-
-#### Assembly Notes & PCB repo: [Lichee-Jack-pcb](https://github.com/KaliAssistant/Lichee-Jack-pcb)
-
-![](./doc/3D-BTM.png)
-![](./doc/PABA_TOP.jpg)
+Once powered, it boots directly from the SD card into a minimal Debian Linux environment.
 
 ---
 
-## 3D printable cases
+### 2. Mode selection (hardware switch)
 
-#### see: [README](./3dp/README.md)
+A physical **SP3T mode-switch** selects the operating mode **before boot**:
 
-![](./doc/CASE_WITHSW.jpeg)
-![](./doc/KEYCHAIN.JPG)
+| Mode | Purpose |
+|-----:|--------|
+| 0 | Debug / development mode |
+| 1 | Payload 1 execution |
+| 2 | Payload 2 execution |
 
----
-
-## Build Instructions
-
-1. Create a Debian/Ubuntu/Kali (or other Debian-based) Linux environment
-   *(You can use a VM or physical machine — author uses a Debian laptop)*
-
-2. Clone the repository:
-
-    ```bash
-    git clone https://github.com/KaliAssistant/Lichee-Jack.git
-    ```
-
-3. Install required dependencies:
-    ```bash
-    sudo ./dep.sh
-    sudo apt update
-    sudo apt install -y docker.io kconfig-frontends make cmake automake autoconf libtool libtool-bin rsync
-    ```
-
-4. Navigate into the builder:
-
-   ```bash
-   cd sophgo-sg200x-debian
-   ```
-
-5. Build the docker image:
-
-    ```bash
-    ./build_docker.sh
-    ```
-
-6. Run image build script:
-
-    ```bash
-    ./build_image.sh
-    ```
-
-7. The resulting SD image will be written to: `sophgo-sg200x-debian/image/licheervnano_sd.img`. To write the image to your SD card (replace `/dev/<your-sd>`):
-
-    ```bash
-    sudo dd if=./image/licheervnano_sd.img of=/dev/<your-sd> bs=4M status=progress conv=fsync
-    sudo sync
-    ```
-
-> [!IMPORTANT]
-> double-check `/dev/<your-sd>` before running `dd`.
+The selected mode determines:
+- Which payloads are executed
+- Which USB gadget functions are exposed
+- LED behavior and system services
 
 ---
 
-## Configuration: `licheejack.toml`
+### 3. Payload execution
 
-Create a TOML config file at `/root/config/licheejack.toml` on the device. Example:
+Payloads are **shell-based** and executed automatically after boot.
 
-```toml
-[network]
-end0.static.ipv4_addr = "172.16.80.1/24"
-end0.static.gateway = ""
+Typical payload actions include:
+- Network reconnaissance (ARP, DHCP, SNMP, mDNS)
+- Traffic redirection or MITM setup
+- Data exfiltration over USB or Ethernet
+- LED / audio feedback for execution state
 
-end0.dhcp_server.ipv4_addr = "192.168.87.1/24"
-end0.dhcp_server.listen_address = "192.168.87.1"
-end0.dhcp_server.dhcp_range = "192.168.87.10,192.168.87.254,255.255.255.0,60m" # dnsmasq format
-end0.dhcp_server.dhcp_options = [["3", ""], ["6", ""]]
-end0.dhcp_client.dns_servers = [ "1.1.1.1", "8.8.8.8" ]
-
-[authentication]
-shadow = [
-  "root:$y$j9...............................eznl89d19/...................dh5:20351:0:99999:7:::",
-  "debian:$y$j...............................R2cZ1I2s/..................dh5:20351:0:99999:7:::"]
-ssh.root_login = "prohibit-password" # password|key|no
-ssh.allow_hosts = [
-  ["root", "ssh-ed25519 AAAAC3N............................................qhyMb91BK kali@KALI"],
-  ["debian", "ssh-ed25519 AAAAC3Nz........................................xxxxMb91BK kali@KALI"]
-]
-```
-
-Save the file as `/root/config/licheejack.toml` on the device (or copy it later via SCP when in factory mode).
+Payload logic is **transparent and modifiable** — no obfuscation, no closed binaries.
 
 ---
 
-## TOML configuration fields (detailed)
+### 4. Visual & physical feedback
 
-Below is a detailed description of the commonly used `licheejack.toml` fields and how they map to generated NetworkManager connection files and `dnsmasq` configuration.
+- **RJ45 RGB LED**
+  - Boot status
+  - Link state
+  - Payload activity
+  - Error conditions
+- Optional **audio cues** via onboard speaker
 
-```toml
-[network]
-end0.static.ipv4_addr = "172.16.80.1/24"
-end0.static.gateway = ""
-
-end0.dhcp_server.ipv4_addr = "192.168.87.1/24"
-end0.dhcp_server.listen_address = "192.168.87.1"
-end0.dhcp_server.dhcp_range = "192.168.87.10,192.168.87.254,255.255.255.0,60m" # dnsmasq format
-end0.dhcp_server.dhcp_options = [["3", ""], ["6", ""]]
-end0.dhcp_client.dns_servers = [ "1.1.1.1", "8.8.8.8" ]
-
-[authentication]
-shadow = [
-  "root:$y$j9...............................eznl89d19/...................dh5:20351:0:99999:7:::",
-  "debian:$y$j...............................R2cZ1I2s/..................dh5:20351:0:99999:7:::"]
-ssh.root_login = "prohibit-password" # password|key|no
-ssh.allow_hosts = [
-  ["root", "ssh-ed25519 AAAAC3N............................................qhyMb91BK kali@KALI"],
-  ["debian", "ssh-ed25519 AAAAC3Nz........................................xxxxMb91BK kali@KALI"]
-]
-```
-
-### Field explanations and mappings
-
-* `end0.static.ipv4_addr` / `end0.static.gateway`
-
-  * Used to generate `static.nmconnection` (NetworkManager file):
-
-    ```ini
-    [connection]
-    id=static
-    uuid=<uuidgen>
-    type=ethernet
-    autoconnect=false
-    interface-name=end0
-
-    [ipv4]
-    address1=172.16.80.1/24
-    method=manual
-    ```
-
-* `end0.dhcp_server.*`
-
-  * Generates `dhcp-server.nmconnection` plus `dnsmasq.conf` entries. Example `dhcp-server.nmconnection`:
-
-    ```ini
-    [connection]
-    id=dhcp-server
-    uuid=<uuidgen>
-    type=ethernet
-    autoconnect=false
-    interface-name=end0
-
-    [ipv4]
-    address1=192.168.87.1/24
-    method=manual
-    ```
-  * `dnsmasq.conf` lines produced from the TOML fields:
-
-    ```text
-    listen-address=192.168.87.1
-    dhcp-range=192.168.87.10,192.168.87.254,60m
-    dhcp-option=<tag>,<value>   # generated from dhcp_options entries
-    ```
-
-* `end0.dhcp_client.dns_servers`
-
-  * Generates `dhcp-client.nmconnection` for a DHCP client profile used when the interface should act as a client:
-
-    ```ini
-    [connection]
-    id=dhcp-client
-    uuid=<uuidgen>
-    type=ethernet
-    autoconnect=false
-    interface-name=end0
-
-    [ipv4]
-    dns=1.1.1.1;8.8.8.8;
-    method=auto
-    ```
-
-* `[authentication]` / `shadow`
-
-  * Entries in `shadow` are applied to `/etc/shadow` to set hashed passwords for accounts (root, lichee, debian, etc.). Provide properly generated salted hashes — do not store plaintext passwords.
-
-* `ssh.root_login`
-
-  * Controls `PermitRootLogin` in `/etc/ssh/sshd_config`. Valid values: `password`, `key`, `no`, `prohibit-password`.
-
-* `ssh.allow_hosts`
-
-  * Use `ssh.allow_hosts` in `licheejack.toml` to provision public keys for users and automatically populate their `~/.ssh/authorized_keys`. The expected format is an array of `[username, key]` pairs.
-
-  * Example TOML entry:
-
-    ```toml
-    ssh.allow_hosts = [
-    ["root", "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBExampleKeyForRoot kali@KALI"],
-    ["debian", "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBExampleKeyForDebian user@HOST"]
-    ]
-    ```
-  * What the provisioning does (typical behavior performed by `jackconf apply`):
-
-    * For each `[user, key]` pair:
-
-    * Ensures the user account exists (if not, the key can be written to `/root/.ssh/authorized_keys` or the user's home depending on your policy).
-    * Creates the user's `~/.ssh` directory with mode `0700`.
-    * Appends the public key to `~/.ssh/authorized_keys` (mode `0600`) if it is not already present.
-    * Sets correct ownership (`chown user:user`) on `.ssh` and `authorized_keys`.
-
-
-
-### Notes & tips
-
-* `uuid` values in generated `*.nmconnection` files should be generated with `uuidgen`.
-* `dhcp_range` follows `dnsmasq` format: `start,end,lease` (optional netmask omitted in some forms). If you need to include netmask, use `start,end,netmask,lease`.
-* `dhcp_options` should be an array of `[ ["option", "value"], ... ]`. For example `[["3",""],["6","" ]]` will produce `dhcp-option=3` and `dhcp-option=6` (gateway and DNS respectively) — if a value is empty the option will be added without a parameter.
-* When creating `shadow` hashes on your host use **yescrypt** (recommended). Example methods:
-
-  * `mkpasswd --method=yescrypt` (if available on your system)
-  * Python: `python -c "import crypt; print(crypt.crypt('yourpassword', crypt.mksalt(crypt.METHOD_YESCRYPT)))"` (requires a Python build with `METHOD_YESCRYPT`)
-
-  Provide yescrypt hashes in the `shadow` array — do **not** store plaintext passwords.
-* Always validate generated NetworkManager files with `nmcli connection load <file>` or by placing them under `/etc/NetworkManager/system-connections/` and checking `nmcli connection show`.
+This allows the operator to understand the device state **without connecting a terminal**.
 
 ---
 
-## Prepare `udisk.img` (USB Mass Storage for payloads & loot)
+### 5. Access & control
 
-Create a 200 MB FAT image called `udisk.img` to act as UMS storage for payloads and loot:
+Depending on configuration, Lichee-Jack can expose:
+- USB Ethernet (CDC-ECM / RNDIS)
+- USB serial console
+- SSH over USB or LAN
 
-```bash
-dd if=/dev/zero of=udisk.img bs=1M count=200 status=progress
-sudo losetup --show -fP udisk.img
-# Suppose loop device is /dev/loop0; format it:
-sudo mkfs.vfat -F 32 -n "LICHEE-JACK" /dev/loop0
-sudo losetup -d /dev/loop0
-```
+All services are controlled via init scripts and build-time configuration.
 
-Create the directory tree to populate the image (example):
-
-```
-.
-|-- loot
-|-- payloads
-    |-- mod1.d
-    |-- mod2.d
-```
-
-Copy payloads and loot into the image before detaching, or write files to the UMS disk when the device is plugged in DEBUG mode.
 
 ---
 
-## First boot & workflow
+## Contributors
 
-1. Insert the SD card into Lichee-Jack.
-2. Make sure the SP3T mod-switch is in **pos0 (DEBUG MODE)**.
-3. Plug a data-capable USB-C cable from the device to your computer.
-4. Wait ~30s for boot. The device will announce **FACTORY MODE** and the LED will blink yellow (~1 Hz).
-5. Your computer should detect a new USB RNDIS Ethernet interface and acquire DHCP in `10.42.0.x/24`. Lichee-Jack will be `10.42.0.1`.
-6. Copy `udisk.img` to `/root` on the device (SCP — `root:toor` by default) and copy `licheejack.toml` to `/root/config/`.
+Lichee-Jack is developed as a **community-driven open-source project**.
 
-    ```bash
-    scp udisk.img root@10.42.0.1:/root
-    scp licheejack.toml root@10.42.0.1:/root/config/
-    ```
+- **KaliAssistant** — Project author & maintainer
+- Community contributors — hardware, firmware, payloads, documentation
 
-7. SSH into the device as root and run:
-
-    ```bash
-    ssh root@10.42.0.1
-    # then on device:
-    jackconf apply
-    reboot
-    ```
-
-8. After reboot the device will come up in **DEBUG MODE**. Your computer should now see RNDIS + UMS disk. You can edit payloads directly on the UMS disk.
+Contributions are welcome:
+- Payloads
+- Hardware extensions
+- Documentation improvements
+- Bug fixes
 
 ---
 
 
+## Disclaimer
 
+Lichee-Jack is an **open-source research and development platform** intended for **education, security research, and authorized testing only**.
+
+This project is designed to help users understand:
+
+* USB gadget frameworks on Linux
+* Embedded Linux system design
+* Network protocols and diagnostics
+* Hardware / software co-design for security tooling
+
+⚠️ **Legal & ethical use required**
+
+You are solely responsible for how you use this device and its software.
+
+* **Do not** use Lichee-Jack on networks, systems, or devices you do not own or explicitly have permission to test.
+* **Do not** use it for unauthorized interception, disruption, or data extraction.
+* **Always** comply with local laws and regulations.
+
+The authors and contributors **assume no liability** for misuse, damage, data loss, or legal consequences arising from use of this project.
+
+If you are unsure whether a use-case is legal or permitted — **do not proceed**.
+
+---
+
+## License
+
+Lichee-Jack is a **fully open-source project**. Different parts of the project are licensed as follows:
+
+### Software
+
+* Licensed under the **GNU General Public License v3.0 (GPL-3.0)**
+* This includes:
+
+  * System scripts
+  * Payload framework
+  * Build tools
+  * Init services
+
+You are free to:
+
+* Use
+* Study
+* Modify
+* Redistribute
+
+**Under the condition** that derivative works remain open-source and are distributed under the same license.
+
+### Hardware & PCB Design
+
+* PCB schematics and layouts are licensed under the **GNU General Public License v3.0 (GPL-3.0)**
+
+This includes:
+
+* Schematics
+* PCB layout files
+* Netlists
+* Manufacturing outputs (when derived from GPL sources)
+
+Any modified or redistributed PCB design must:
+
+* Retain GPL-3.0 licensing
+* Provide corresponding source design files
+
+This ensures hardware designs remain fully open and auditable.
+
+### Mechanical / 3D Models
+
+* 3D-printable enclosures (STL/STEP) are released under **CC BY-SA 4.0** unless otherwise noted.
+
+This ensures:
+
+* Attribution is preserved
+* Modifications remain open
+* Community improvements flow back
+
+Please check individual directories for exact license headers.
+
+---
+
+## Security Philosophy
+
+Lichee-Jack follows a **transparent-by-design** philosophy:
+
+* No hidden payloads
+* No closed binaries
+* No phone-home behavior
+* No obfuscation
+
+Every action taken by the device can be audited by reviewing:
+
+* Shell scripts
+* Init logic
+* Payload sources
+
+This makes Lichee-Jack suitable for:
+
+* Blue team learning
+* Red team labs
+* Academic demonstrations
+* Defensive research
+
+---
+
+## Project Status
+
+* Hardware: **Active development**
+* Software: **Usable / evolving**
+* Documentation: **In progress**
+
+This is **not a mass-produced commercial product**.
+
+Expect:
+
+* Rough edges
+* DIY assembly
+* Iterative improvements
+
+Community feedback and contributions directly shape the roadmap.
+
+---
+
+## Trademarks & Attribution
+
+Lichee-Jack is an **independent project**.
+
+* Not affiliated with Hak5, Shark Jack, or any commercial implant vendor
+* Inspired by existing open security tools and community research
+
+All trademarks belong to their respective owners.
+
+---
+
+## Full Documentation
+
+Complete documentation, build guides, hardware details, and payload development references are maintained in the **Lichee-Jack Wiki**.
+
+👉 **Lichee-Jack Wiki**: [https://kaliassistant.github.io/Lichee-Jack-wiki](https://kaliassistant.github.io/Lichee-Jack-wiki)
+
+The wiki includes:
+
+* Hardware architecture & schematics overview
+* Extension board and pinout documentation
+* System boot flow and init logic
+* USB gadget framework (gt) configuration
+* Payload development guides
+* Build-from-source instructions
+
+For in-depth technical details, please refer to the wiki.
+
+---
+
+
+## Get Involved
+
+If you want to help:
+
+* Submit payloads
+* Improve documentation
+* Design extension boards
+* Review security logic
+
+Please see the repository contribution guide.
+
+**Hack responsibly. Build openly. Learn deeply.**
 

@@ -5,3 +5,6 @@
 	path = sophgo-sg200x-debian
 	url = https://github.com/KaliAssistant/sophgo-sg200x-debian.git
 	branch = lichee-jack
+[submodule "3dp"]
+	path = 3dp
+	url = git@github-kaliassistant:KaliAssistant/Lichee-Jack-3dp.git
