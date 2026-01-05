@@ -20,7 +20,8 @@ jobs:
             ca-certificates \
             git \
             curl \
-            xz-utils
+            xz-utils \
+            qemu-user-static
 
       - name: Checkout source
         uses: actions/checkout@v4
@@ -33,6 +34,10 @@ jobs:
         run: |
           chmod +x dep.sh
           ./dep.sh
+
+      - name: Enable QEMU binfmt (riscv64)
+        run: |
+          docker run --privileged --rm tonistiigi/binfmt --install riscv64
 
       - name: Build docker image
         run: |
