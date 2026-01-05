@@ -1,0 +1,55 @@
+name: Build & Release Lichee-Jack images
+
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+  steps:
+    - name: Install base tools
+      run: |
+        apt-get update
+        apt-get install -y \
+          ca-certificates \
+          git \
+          curl \
+          xz-utils \
+          docker.io
+
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    - name: Mark workspace as safe for git
+      run: |
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+    - name: Clone submodules
+      run: |
+        chmod +x dep.sh
+        ./dep.sh
+
+    - name: Build docker image
+      run: |
+        cd "$GITHUB_WORKSPACE/sophgo-sg200x-debian"
+        ./build_docker.sh
+
+    - name: Build Lichee-Jack image
+      run: |
+        cd "$GITHUB_WORKSPACE/sophgo-sg200x-debian"
+        ./build_image.sh
+        xz -T0 image/licheervnano_sd.img
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Lichee-Jack Build ${{ github.ref_name }}
+        files: |
+          sophgo-sg200x-debian/image/licheervnano_sd.img.xz
