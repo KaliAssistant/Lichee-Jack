@@ -49,7 +49,7 @@ jobs:
           cd "$GITHUB_WORKSPACE/sophgo-sg200x-debian"
           sed -i 's/-it / /g' build_image.sh
           ./build_image.sh
-          xz -T0 image/licheervnano_sd.img
+          sudo xz -T0 image/licheervnano_sd.img
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -58,3 +58,5 @@ jobs:
           name: Lichee-Jack Build ${{ github.ref_name }}
           files: |
             sophgo-sg200x-debian/image/licheervnano_sd.img.xz
+            sophgo-sg200x-debian/image/linux-headers-*.deb
+            sophgo-sg200x-debian/image/linux-image-*.deb
