@@ -1,7 +1,7 @@
 <img src="./doc/lichee-jack-icon.png" width="50%">
 
 # Lichee-Jack
-> Portable social-engineering LAN tool for automated payloads and wired audits — Best alternative to Hak5 SharkJack
+> A low-cost, DIY social-engineering LAN Attack & Penetration Testing Army knife
 
 ## About
 
@@ -289,4 +289,5 @@ If you want to help:
 Please see the repository contribution guide.
 
 **Hack responsibly. Build openly. Learn deeply.**
+
 
