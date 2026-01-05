@@ -20,8 +20,7 @@ jobs:
             ca-certificates \
             git \
             curl \
-            xz-utils \
-            docker.io
+            xz-utils
 
       - name: Checkout source
         uses: actions/checkout@v4
