@@ -7,4 +7,4 @@
 	branch = lichee-jack
 [submodule "3dp"]
 	path = 3dp
-	url = git@github-kaliassistant:KaliAssistant/Lichee-Jack-3dp.git
+	url = https://github.com/KaliAssistant/Lichee-Jack-3dp.git
