@@ -3,6 +3,8 @@
 # Lichee-Jack
 > A low-cost, DIY social-engineering LAN Attack & Penetration Testing Army knife
 
+![](./doc/CASE2.jpeg)
+
 ## About
 
 **Lichee-Jack** is a low-cost, DIY **social-engineering LAN Attack & Penetration Testing Army knife** inspired by the **Hak5 SharkJack**.
@@ -54,6 +56,8 @@ Once powered, it boots directly from the SD card into a minimal Debian Linux env
 
 ### 2. Mode selection (hardware switch)
 
+<img src="./doc/MODSW.gif" width=100% >
+
 A physical **SP3T mode-switch** selects the operating mode **before boot**:
 
 | Mode | Purpose |
@@ -84,6 +88,8 @@ Payload logic is **transparent and modifiable** — no obfuscation, no closed bi
 ---
 
 ### 4. Visual & physical feedback
+
+<img src="./doc/RGBLED.gif" width=100%>
 
 - **RJ45 RGB LED**
   - Boot status
@@ -174,6 +180,8 @@ You are free to:
 
 ### Hardware & PCB Design
 
+![](./doc/Lichee-Jack_ext-board_sch.svg)
+
 * PCB schematics and layouts are licensed under the **GNU General Public License v3.0 (GPL-3.0)**
 
 This includes:
@@ -191,6 +199,8 @@ Any modified or redistributed PCB design must:
 This ensures hardware designs remain fully open and auditable.
 
 ### Mechanical / 3D Models
+
+![](./doc/IMG_E6620.JPG)
 
 * 3D-printable enclosures (STL/STEP) are released under **CC BY-SA 4.0** unless otherwise noted.
 
